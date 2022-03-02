@@ -1,5 +1,6 @@
 package org.cycles.services;
 
+import io.quarkus.elytron.security.common.BcryptUtil;
 import org.cycles.entites.User;
 import org.cycles.repositories.ProductRepository;
 import org.cycles.repositories.UserRepository;
@@ -29,6 +30,7 @@ public class UserService {
         if (user == null || user.getUserId() != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
+        user.setUserPassword(BcryptUtil.bcryptHash(user.getUserPassword()));
 
         return userRepository.persistAndFlush(user)
                     .replaceWith(Response.ok(user).status(Response.Status.CREATED)::build);
