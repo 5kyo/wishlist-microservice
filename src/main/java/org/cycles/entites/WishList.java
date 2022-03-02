@@ -2,10 +2,12 @@ package org.cycles.entites;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Cacheable;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 
-@Embeddable
+@Entity
+@Cacheable
 public class WishList implements Serializable{
     
     @EmbeddedId
@@ -18,5 +20,4 @@ public class WishList implements Serializable{
     public void setWishListPK(WishListPK wishListPK) {
         this.wishListPK = wishListPK;
     }
-
 }

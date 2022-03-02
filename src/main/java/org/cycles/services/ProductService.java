@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
+import org.cycles.dto.ProductDto;
 import org.cycles.entites.Product;
 import org.cycles.repositories.ProductRepository;
 
@@ -31,11 +32,17 @@ public class ProductService {
     }
 
     @Transactional
-    public Uni<Response> createProduct(Product product) {
-        if (product == null || product.getProductId()!= null) {
+    public Uni<Response> createProduct(ProductDto productDto) {
+        if (productDto == null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
 
+        Product product = new Product();
+        product.setProductId(productDto.getProductId());
+        product.setProductName(productDto.getProductName());
+        product.setProductPrice(productDto.getProductPrice());
+        product.setProductStock(productDto.getProductStock());
+        
         return productRepository.persistAndFlush(product)
                     .replaceWith(Response.ok(product).status(Response.Status.CREATED)::build);
     }

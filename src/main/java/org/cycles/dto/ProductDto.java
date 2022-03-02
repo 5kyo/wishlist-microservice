@@ -1,12 +1,6 @@
-package org.cycles.entites;
+package org.cycles.dto;
 
-import javax.persistence.*;
-
-@Entity
-@Cacheable
-public class Product{
-
-    @Id
+public class ProductDto{
     private Long productId;
     
     private String productName;
@@ -14,11 +8,11 @@ public class Product{
     private Integer productStock;
     private double productPrice; 
 
-    public Product(){
+    public ProductDto(){
 
     }
 
-    public Product(Long productId, String productName, Integer productStock, double productPrice) {
+    public ProductDto(Long productId, String productName, Integer productStock, double productPrice) {
         this.productId = productId;
         this.productName = productName;
         this.productStock = productStock;

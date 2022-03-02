@@ -3,11 +3,9 @@ package org.cycles.entites;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 
-@Entity
-@Cacheable
+@Embeddable
 public class WishListPK implements Serializable{
 
     private Long userId;
@@ -28,7 +26,6 @@ public class WishListPK implements Serializable{
     public void setProductId(Long productId) {
         this.productId = productId;
     }
-
 
     @Override
     public boolean equals(Object o) {

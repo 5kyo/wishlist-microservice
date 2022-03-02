@@ -10,6 +10,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import org.cycles.dto.ProductDto;
 import org.cycles.entites.Product;
 import org.cycles.services.ProductService;
 import org.jboss.resteasy.reactive.RestPath;
@@ -34,8 +35,8 @@ public class ProductResource {
     }
 
     @POST
-    public Uni<Response> createProduct(Product product){
-        return productService.createProduct(product);
+    public Uni<Response> createProduct(ProductDto productDto){
+        return productService.createProduct(productDto);
     }
 
     @PATCH

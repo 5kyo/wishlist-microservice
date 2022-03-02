@@ -5,7 +5,10 @@ import javax.persistence.*;
 @Entity
 @Cacheable
 public class User{
+
+    @Id
     private Long userId;
+    
     private String userName;
     private String userSurname;
     private String userNickname;
