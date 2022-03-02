@@ -1,4 +1,4 @@
-package org.cycles.resteasyjackson;
+package org.cycles.resources;
 
 
 // import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
@@ -12,8 +12,8 @@ import io.smallrye.mutiny.Uni;
 // import io.vertx.mutiny.ext.web.client.WebClient;
 // import lombok.extern.slf4j.Slf4j;
 import org.cycles.entites.User;
+import org.cycles.services.UserService;
 import org.cycles.entites.Product;
-import org.cycles.repositories.UserRepository;
 
 // import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -22,10 +22,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.List;
+
 // import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 // import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 // @Slf4j
@@ -33,13 +34,13 @@ import java.util.Set;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 
-public class UserApi {
+public class UserResource {
 
     @Inject
     EntityManager em;
 
     @Inject
-    UserRepository pr;
+    UserService pr;
 
 //  @Inject
 //  Vertx vertx;
@@ -53,10 +54,10 @@ public class UserApi {
 //                         .setDefaultPort(8081).setSsl(false).setTrustAll(true));
 //     }
 
-    // @GET
-    // public Uni<List<User>> list() {
-    //     return pr.listUser();
-    // }
+    @GET
+    public Uni<List<User>> list() {
+        return pr.listUser();
+    }
 
     @GET
     @Path("/{Id}")
