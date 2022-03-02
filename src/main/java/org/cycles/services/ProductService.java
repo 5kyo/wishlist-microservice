@@ -31,8 +31,8 @@ public class ProductService {
     }
 
     @Transactional
-    public Uni<Response> addProduct(Product product) {
-        if (product == null || product.id != null) {
+    public Uni<Response> createProduct(Product product) {
+        if (product == null || product.getProductId()!= null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
 

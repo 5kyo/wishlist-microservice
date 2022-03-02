@@ -34,8 +34,8 @@ public class ProductResource {
     }
 
     @POST
-    public Uni<Response> addProduct(Product product){
-        return productService.addProduct(product);
+    public Uni<Response> createProduct(Product product){
+        return productService.createProduct(product);
     }
 
     @PATCH

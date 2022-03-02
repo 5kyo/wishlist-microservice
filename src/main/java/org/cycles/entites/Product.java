@@ -1,25 +1,12 @@
 package org.cycles.entites;
 
-import java.util.Set;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
-import io.quarkus.hibernate.reactive.panache.PanacheEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import javax.persistence.*;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper=false)
 @Cacheable
-@Table(name = "product")
-public class Product extends PanacheEntity{
+public class Product{
 
-    @Column(length = 40, unique = true)
+    private Long productId;
     private String productName;
     
     private Integer productStock;
@@ -29,18 +16,58 @@ public class Product extends PanacheEntity{
 
     }
 
-    public Product(String productName, Integer productStock, double productPrice) {
+    public Product(Long productId, String productName, Integer productStock, double productPrice) {
+        this.productId = productId;
         this.productName = productName;
         this.productStock = productStock;
         this.productPrice = productPrice;
     }
 
+    public Long getProductId() {
+        return this.productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public String getProductName() {
+        return this.productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Integer getProductStock() {
+        return this.productStock;
+    }
+
+    public void setProductStock(Integer productStock) {
+        this.productStock = productStock;
+    }
+
+    public double getProductPrice() {
+        return this.productPrice;
+    }
+
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
+    }
 
     public void addCountToStock(Integer productStock){
         this.productStock+=productStock;
     }
 
-    @ManyToMany(mappedBy = "products")
-    private Set<User> users;
+    // public Set<User> getUsers() {
+    //     return this.users;
+    // }
+
+    // public void setUsers(Set<User> users) {
+    //     this.users = users;
+    // }
+
+    // @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
+    // private Set<User> users;
 
 }

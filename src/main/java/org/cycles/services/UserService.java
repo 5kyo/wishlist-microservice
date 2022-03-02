@@ -1,70 +1,106 @@
 package org.cycles.services;
 
-import org.cycles.entites.Product;
 import org.cycles.entites.User;
 import org.cycles.repositories.ProductRepository;
 import org.cycles.repositories.UserRepository;
 
+import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.Set;
 
 @ApplicationScoped
 public class UserService {
     
     @Inject
-    UserRepository em;
+    UserRepository userRepository;
 
     @Inject
     ProductRepository productRepository;
 
     @Transactional
-    public Uni<Response> createdUser(User p){
-        return em.persistAndFlush(p)
-                .replaceWith(Response.ok(p).status(Response.Status.CREATED)::build);
+    public Uni<Response> createUser(User user){
+        if (user == null || user.getUserId() != null) {
+            throw new WebApplicationException("Id was invalidly set on request.", 422);
+        }
+
+        return userRepository.persistAndFlush(user)
+                    .replaceWith(Response.ok(user).status(Response.Status.CREATED)::build);
     }
 
     @Transactional
-    public Uni<Response> deleteUser(User p){
-        em.delete(p);
-        // em.remove(em.contains(p) ? p : em.merge(p));
-        return Uni.createFrom().item(Response.ok().status(Response.Status.ACCEPTED)::build);
+    public Uni<Response> deleteUser(Long id){
+        return userRepository.deleteById(id)
+            .call(() -> productRepository.flush())
+            .replaceWith(Response.ok().status(Response.Status.ACCEPTED)::build);
     }
 
     @Transactional
-    public Uni<List<User>> listUser(){
-        return em.listAll();
+    public Uni<List<User>> getAllUsers(){
+        return userRepository.listAll(Sort.by("name"));
     }
 
     @Transactional
-    public Uni<User> findUser(Long Id){
-        return em.findById(Id);
+    public Uni<User> getSingleUser(Long id){
+        return userRepository.findById(id);
     }
     
     @Transactional
-    public Uni<Response> updateUser(User p){
-        em.persist(p);
-        // em.merge(p);
-        return Uni.createFrom().item(Response.ok(p).status(Response.Status.ACCEPTED)::build);
+    public Uni<Response> updateUser(User user){
+        if(user == null){
+            throw new WebApplicationException("User was not send on request.", 422);
+        }
+
+        return userRepository.persistAndFlush(user)
+            .replaceWith(Response.ok(user).status(Response.Status.ACCEPTED)::build);
     }
 
-    @Transactional
-    public Uni<Set<Product>> getWishList(Long id){
-        User user = (User) em.findById(id);
-        return Uni.createFrom().item(user.getProducts());
-    } 
 
-    @Transactional
-    public Uni<Boolean> setProductToWishList(Long userId, Long productId){
-        Product product = (Product) productRepository.findById(productId);
-        User user = (User) em.findById(userId);
-        return Uni.createFrom().item(user.getProducts().add(product));
-        
-    }
+    // @Transactional
+    // public Uni<User> getWishList(Long id){
+    //     return userRepository.findById(id)
+    //         .onItem()
+    //         .invoke(user -> user.getProducts());
+    // } 
+
+    // @Transactional
+    // public Uni<User> addProductToWishList(Long id, Long productId){
+    //     return userRepository.findById(id)
+    //                          .onItem()
+    //                          .invoke(user -> {
+    //                              productRepository.findById(productId)
+    //                              .onItem()
+    //                              .invoke(product -> {
+    //                                 user.setProducts(product);
+    //                                 userRepository.persistAndFlush(user);
+    //                              });
+    //                          });
+                            // .onItem()
+                            // .ifNotNull()
+                            // .invoke(user -> {
+                            //     productRepository.findById(productId)
+                            //                     .onItem()
+                            //                     .ifNotNull()
+                            //                     .invoke(product -> {
+                            //                         System.out.println(product.getProductName());
+                            //                         user.setProducts(product);
+                            //                         userRepository.persistAndFlush(user);
+                            //                     });
+                            // }).replaceWith(Response.ok().status(Response.Status.ACCEPTED)::build);
+        // return productRepository.findById(productId)
+        //                         .onItem()
+        //                         .invoke(entity -> {
+        //                             userRepository.findById(id)
+        //                             .onItem()
+        //                             .invoke(user -> {
+        //                                 user.getProducts().add(entity);
+        //                                 userRepository.persistAndFlush(user);
+        //                             });
+        //                         })
 }
