@@ -1,7 +1,5 @@
 package org.cycles.services;
 
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -9,11 +7,13 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.cycles.dto.ProductDto;
-import org.cycles.entites.Product;
-import org.cycles.repositories.ProductRepository;
 
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
+import org.cycles.entites.Product;
+import org.cycles.repositories.ProductRepository;
+
+import java.util.List;
 
 @ApplicationScoped
 public class ProductService {

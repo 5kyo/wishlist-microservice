@@ -6,6 +6,8 @@ import org.cycles.entites.User;
 import org.cycles.services.UserService;
 import org.jboss.resteasy.reactive.RestPath;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,28 +25,33 @@ public class UserResource {
     UserService userService;
 
     @GET
+    @PermitAll
     public Uni<List<User>> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GET
     @Path("/{id}")
+    @PermitAll
     public Uni<User> getSingleUser(@RestPath Long id) {
         return userService.getSingleUser(id);
     }
 
     @POST
+    @RolesAllowed({"admin"})
     public Uni<Response> createUser(User user) {
         return userService.createUser(user);
     }
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"admin"})
     public Uni<Response> deleteUser(@RestPath Long id) {
         return userService.deleteUser(id);
     }
 
     @PUT
+    @RolesAllowed({"admin"})
     public Uni<Response> updateUser(User user) {
         return userService.updateUser(user);
     }

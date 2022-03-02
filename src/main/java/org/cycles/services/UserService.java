@@ -43,7 +43,7 @@ public class UserService {
 
     @Transactional
     public Uni<List<User>> getAllUsers(){
-        return userRepository.listAll(Sort.by("name"));
+        return userRepository.listAll(Sort.by("userName"));
     }
 
     @Transactional
@@ -56,9 +56,19 @@ public class UserService {
         if(user == null){
             throw new WebApplicationException("User was not send on request.", 422);
         }
-
-        return userRepository.persistAndFlush(user)
-            .replaceWith(Response.ok(user).status(Response.Status.ACCEPTED)::build);
+        return userRepository.findById(user.getUserId()).chain((pUser)->{
+            pUser.setUserId(pUser.getUserId());
+            pUser.setUserActive(user.getUserActive());
+            pUser.setUserEmail(user.getUserEmail());
+            pUser.setUserName(user.getUserName());
+            pUser.setUserNickname(user.getUserNickname());
+            pUser.setUserRole(user.getUserRole());
+            pUser.setUserPassword(user.getUserPassword());
+            pUser.setUserSurname(user.getUserSurname());
+            pUser.setUserPhoneNumber(user.getUserPhoneNumber());
+            return userRepository.persistAndFlush(pUser)
+                    .replaceWith(Response.ok(user).status(Response.Status.ACCEPTED)::build);
+        });
     }
 
 

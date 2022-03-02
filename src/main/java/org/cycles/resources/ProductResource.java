@@ -2,6 +2,8 @@ package org.cycles.resources;
 
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
@@ -24,35 +26,41 @@ public class ProductResource {
     ProductService productService;
 
     @GET
+    @PermitAll
     public Uni<List<Product>> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GET
     @Path("{id}")
+    @PermitAll
     public Uni<Product> getSingleProduct(@RestPath Long id){
         return productService.getSingleProduct(id);
     }
 
     @POST
+    @RolesAllowed({"admin"})
     public Uni<Response> createProduct(ProductDto productDto){
         return productService.createProduct(productDto);
     }
 
     @PATCH
     @Path("{id}")
+    @RolesAllowed({"admin"})
     public Uni<Response> updateProductName(@RestPath Long id, Product product) {
         return productService.updateProductName(id, product);
     }
 
     @PATCH
     @Path("{id}/stockProduct")
+    @RolesAllowed({"admin"})
     public Uni<Response> addCountToProductStock(@RestPath Long id, Product product) {
         return productService.addCountToProductStock(id, product);
     }
 
     @DELETE
     @Path("{id}")
+    @RolesAllowed({"admin"})
     public Uni<Response> deleteProduct(@RestPath Long id) {
         return productService.deleteProduct(id);
     }

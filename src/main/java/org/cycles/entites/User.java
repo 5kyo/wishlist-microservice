@@ -1,12 +1,15 @@
 package org.cycles.entites;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Cacheable
 public class User{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     
     private String userName;
@@ -17,6 +20,15 @@ public class User{
     private String userPhoneNumber;
     private String userRole;
     private int userActive;
+
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = { @JoinColumn(name = "userId") },
+            inverseJoinColumns = { @JoinColumn(name = "productId") }
+    )
+    private Set<Product> products;
+
     public User(){
 
     }
@@ -103,6 +115,14 @@ public class User{
 
     public void setUserActive(int userActive) {
         this.userActive = userActive;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     // @ManyToMany(fetch = FetchType.EAGER)
