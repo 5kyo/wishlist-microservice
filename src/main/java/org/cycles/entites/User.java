@@ -3,6 +3,7 @@ package org.cycles.entites;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,13 +26,12 @@ public class User implements Serializable{
     @ManyToMany(cascade = { CascadeType.MERGE,
                             CascadeType.PERSIST,
                             CascadeType.REFRESH }, 
-                fetch = FetchType.LAZY)
+                fetch = FetchType.EAGER)
     @JoinTable(
             name = "wishlist",
             joinColumns = { @JoinColumn(name = "userId") },
             inverseJoinColumns = { @JoinColumn(name = "productId") }
     )
-    
     private Set<Product> products;
 
     public User(){
