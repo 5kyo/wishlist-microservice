@@ -34,7 +34,7 @@ public class UserService {
 
     @Transactional
     public Uni<User> getSingleUser(Long id){
-        return userRepository.findById(id);
+        return userRepository.findAll().stream().filter(u->u.getUserId().equals(id)).toUni();
     }
 
     @Transactional
@@ -60,8 +60,9 @@ public class UserService {
 
     @Transactional
     public Uni<Response> deleteUser(Long id){
-        return userRepository.deleteById(id)
-            .call(() -> productRepository.flush())
+        return userRepository.findAll().stream().filter(u->u.getUserId().equals(id)).toUni()
+            .chain((user)->userRepository.delete(user))
+            .call(() -> userRepository.flush())
             .replaceWith(Response.ok().status(Response.Status.ACCEPTED)::build);
     }
 
@@ -70,7 +71,7 @@ public class UserService {
         if(userDto == null){
             throw new WebApplicationException("User was not send on request.", 422);
         }
-        return userRepository.findById(userId)
+        return userRepository.findAll().stream().filter(u->u.getUserId().equals(userId)).toUni()
                                 // .onItem()
                                 // .transform(entity -> Response.ok(entity).build()
                         .onItem()

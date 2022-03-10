@@ -44,7 +44,7 @@ public class ProductResource {
     }
 
     @POST
-    @RolesAllowed({"admin"})
+    //@RolesAllowed({"admin"})
     public Uni<Response> createProduct(ProductDto productDto){
         return productService.createProduct(productDto);
     }
@@ -52,7 +52,7 @@ public class ProductResource {
     @PATCH
     @Consumes("text/plain")
     @Path("{id}")
-    @RolesAllowed({"admin"})
+    //@RolesAllowed({"admin"})
     public Uni<Response> updateProductName(@PathParam("id") Long id, String productName) {
         return productService.updateProductName(id, productName);
     }
@@ -60,7 +60,7 @@ public class ProductResource {
     @PATCH
     @Consumes("text/plain")
     @Path("productStock/{id}")
-    @RolesAllowed({"admin"})
+    //@RolesAllowed({"admin"})
     public Uni<Response> addCountToProductStock(@PathParam("id") Long id, Integer productStock) {
         return productService.addCountToProductStock(id, productStock);
     }
@@ -68,7 +68,7 @@ public class ProductResource {
     @PATCH
     @Consumes("text/plain")
     @Path("productPrice/{id}")
-    @RolesAllowed({"admin"})
+    //@RolesAllowed({"admin"})
     public Uni<Response> updatePriceOfProduct(@PathParam("id") Long id, double productPrice) {
         return productService.updatePriceOfProduct(id, productPrice);
     }
