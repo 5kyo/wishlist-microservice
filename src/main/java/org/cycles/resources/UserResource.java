@@ -2,6 +2,7 @@ package org.cycles.resources;
 
 import io.smallrye.mutiny.Uni;
 
+import org.cycles.dto.UserDto;
 import org.cycles.entites.User;
 import org.cycles.services.UserService;
 import org.jboss.resteasy.reactive.RestPath;
@@ -18,7 +19,6 @@ import java.util.List;
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-
 public class UserResource {
 
     @Inject
@@ -33,41 +33,28 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @PermitAll
-    public Uni<User> getSingleUser(@RestPath Long id) {
-        return userService.getSingleUser(id);
+    public Uni<User> getSingleUser(@RestPath Long userId) {
+        return userService.getSingleUser(userId);
     }
 
     @POST
-    @RolesAllowed({"admin"})
-    public Uni<Response> createUser(User user) {
-        return userService.createUser(user);
+    // @RolesAllowed({"admin"})
+    public Uni<Response> createUser(UserDto userDto) {
+        return userService.createUser(userDto);
     }
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"admin"})
-    public Uni<Response> deleteUser(@RestPath Long id) {
-        return userService.deleteUser(id);
+    // @RolesAllowed({"admin"})
+    public Uni<Response> deleteUser(@RestPath Long userId) {
+        return userService.deleteUser(userId);
     }
 
-    @PUT
-    @RolesAllowed({"admin"})
-    public Uni<Response> updateUser(User user) {
-        return userService.updateUser(user);
+    @PATCH
+    @Path("/{id}")
+    // @RolesAllowed({"admin"})
+    public Uni<Response> updateUser(@PathParam("id") Long userId, UserDto userDto) {
+        return userService.updateUser(userId, userDto);
     }
-
-    // @GET
-    // @Path("/{id}/products")
-    // public Uni<User> getWishList(@RestPath Long id) {
-    //     return userService.getWishList(id);
-    // }
-
-    // @POST
-    // @Path("/{id}/products/{productId}")
-    // public Uni<User> addProductToWishList(@PathParam("id") Long id, 
-    //                                         @PathParam("productId") Long productId) {
-    //     return userService.addProductToWishList(id, productId);
-
-    // }
 
 }

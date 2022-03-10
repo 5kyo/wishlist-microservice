@@ -1,8 +1,5 @@
 package org.cycles.entites;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.io.Serializable;
 
 import javax.persistence.Cacheable;

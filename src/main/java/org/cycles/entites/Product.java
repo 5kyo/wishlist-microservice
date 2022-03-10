@@ -1,10 +1,13 @@
 package org.cycles.entites;
 
+import java.io.Serializable;
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity
 @Cacheable
-public class Product{
+public class Product implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +17,19 @@ public class Product{
     
     private Integer productStock;
     private double productPrice; 
+
+    @ManyToMany(cascade = { CascadeType.MERGE,
+                            CascadeType.PERSIST,
+                            CascadeType.REFRESH }, 
+                fetch = FetchType.EAGER)
+
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = { @JoinColumn(name = "productId") },
+            inverseJoinColumns = {  @JoinColumn(name = "userId") }
+    )
+
+    private Set<User> user;
 
     public Product(){
 
@@ -61,16 +77,5 @@ public class Product{
     public void addCountToStock(Integer productStock){
         this.productStock+=productStock;
     }
-
-    // public Set<User> getUsers() {
-    //     return this.users;
-    // }
-
-    // public void setUsers(Set<User> users) {
-    //     this.users = users;
-    // }
-
-    // @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
-    // private Set<User> users;
 
 }

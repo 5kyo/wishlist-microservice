@@ -38,4 +38,9 @@ public class WishListPK implements Serializable{
         return Objects.equals(userId, wishListPK.userId) && Objects.equals(productId, wishListPK.productId);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, productId);
+    }
+
 }

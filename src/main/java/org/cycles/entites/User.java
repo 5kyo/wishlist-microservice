@@ -1,12 +1,13 @@
 package org.cycles.entites;
 
 import javax.persistence.*;
-import java.util.List;
+
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Cacheable
-public class User{
+public class User implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +22,16 @@ public class User{
     private String userRole;
     private int userActive;
 
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.MERGE,
+                            CascadeType.PERSIST,
+                            CascadeType.REFRESH }, 
+                fetch = FetchType.EAGER)
     @JoinTable(
             name = "wishlist",
             joinColumns = { @JoinColumn(name = "userId") },
             inverseJoinColumns = { @JoinColumn(name = "productId") }
     )
+    
     private Set<Product> products;
 
     public User(){
@@ -124,25 +129,4 @@ public class User{
     public void setProducts(Set<Product> products) {
         this.products = products;
     }
-
-    // @ManyToMany(fetch = FetchType.EAGER)
-    // @JoinTable(
-    //         name = "wishlist",
-    //         joinColumns = { @JoinColumn(name = "user_id") },
-    //         inverseJoinColumns = { @JoinColumn(name = "product_id") }
-    // )
-
-    // private Set<Product> products;
-
-    // public Set<Product> getProducts() {
-    //     return this.products;
-    // }
-
-    // public void setProducts(Product product) {
-    //     if(this.products == null){
-    //         this.products = new HashSet<>();
-    //     }
-
-    //     this.products.add(product);
-    // }
 }

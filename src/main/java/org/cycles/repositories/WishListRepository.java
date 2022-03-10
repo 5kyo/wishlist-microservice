@@ -2,7 +2,6 @@ package org.cycles.repositories;
 
 import io.quarkus.hibernate.reactive.panache.PanacheRepository;
 import io.smallrye.mutiny.Uni;
-import org.cycles.entites.Product;
 import org.cycles.entites.WishList;
 
 import javax.enterprise.context.ApplicationScoped;

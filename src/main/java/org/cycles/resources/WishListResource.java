@@ -20,14 +20,14 @@ public class WishListResource{
     WishListService wishListService;
 
     @POST
-    @RolesAllowed("customer")
+    // @RolesAllowed("customer")
     public Uni<Response> addWishList(WishListDto wishListDto){
         return wishListService.addWishList(wishListDto);
     }
 
     @GET
     @Path("/{userId}")
-    @RolesAllowed("customer")
+    // @RolesAllowed("customer")
     public Uni<Set<Product>> getUserWishList(Long userId){
         return wishListService.getWishListByUserId(userId);
     }

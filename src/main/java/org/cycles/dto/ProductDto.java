@@ -1,6 +1,8 @@
 package org.cycles.dto;
 
-public class ProductDto{
+import java.io.Serializable;
+
+public class ProductDto implements Serializable{
     private Long productId;
     
     private String productName;
@@ -54,16 +56,5 @@ public class ProductDto{
     public void addCountToStock(Integer productStock){
         this.productStock+=productStock;
     }
-
-    // public Set<User> getUsers() {
-    //     return this.users;
-    // }
-
-    // public void setUsers(Set<User> users) {
-    //     this.users = users;
-    // }
-
-    // @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
-    // private Set<User> users;
 
 }

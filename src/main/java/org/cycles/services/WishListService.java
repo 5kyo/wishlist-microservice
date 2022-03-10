@@ -5,7 +5,6 @@ import org.cycles.dto.WishListDto;
 import org.cycles.entites.Product;
 import org.cycles.entites.WishList;
 import org.cycles.entites.WishListPK;
-import org.cycles.repositories.ProductRepository;
 import org.cycles.repositories.UserRepository;
 import org.cycles.repositories.WishListRepository;
 
@@ -24,19 +23,19 @@ public class WishListService {
     UserRepository userRepository;
 
     @Transactional
-    public Uni<Response> addWishList(WishListDto dto){
-        Stream<WishList> wishLists = dto.getProductsIds().stream().map((id)->{
+    public Uni<Response> addWishList(WishListDto wishListDto){
+        Stream<WishList> wishLists = wishListDto.getProductsIds().stream().map( id -> {
             WishList wishList = new WishList();
             WishListPK wishListPK = new WishListPK();
-            wishListPK.setUserId(dto.getUserId());
+            wishListPK.setUserId(wishListDto.getUserId());
             wishListPK.setProductId(id);
             wishList.setWishListPK(wishListPK);
             return wishList;
         });
-
+        
         return wishListRepository.persist(wishLists).chain(()->{
             return wishListRepository.flush();
-        }).replaceWith(Response.ok().build());
+        }).replaceWith(Response.ok(wishListDto).build());
     }
 
     @Transactional

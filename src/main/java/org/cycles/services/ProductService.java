@@ -33,7 +33,7 @@ public class ProductService {
 
     @Transactional
     public Uni<Response> createProduct(ProductDto productDto) {
-        if (productDto == null) {
+        if (productDto == null || productDto.getProductId() != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
 
@@ -50,43 +50,47 @@ public class ProductService {
     @Transactional
     public Uni<Response> deleteProduct(Long id) {
         return productRepository.deleteById(id)
-        .call(() -> productRepository.flush()).replaceWith(Response.ok().status(Response.Status.ACCEPTED)::build);
-            // .map(deleted -> deleted
-            //             ? Response.ok().status(Response.Status.NO_CONTENT).build()
-            //             : Response.ok().status(Response.Status.NOT_FOUND).build());
-        // return Panache.withTransaction(() -> Product.deleteById(id))
-        //         .map(deleted -> deleted
-        //                 ? Response.ok().status(NO_CONTENT).build()
-        //                 : Response.ok().status(NOT_FOUND).build());
+        .call(() -> productRepository.flush()).replaceWith(Response.ok().status(200)::build);
     }
 
-    public Uni<Response> updateProductName(Long id, Product product) {
-        if (product == null) {
+    public Uni<Response> updateProductName(Long id, ProductDto productDto) {
+        if (productDto.getProductName() == null) {
             throw new WebApplicationException("Product name was not set on request.", 422);
         }
 
         return productRepository.findById(id)
                                 .onItem()
                                 .ifNotNull()
-                                .invoke(entity -> entity.setProductName(product.getProductName()))
+                                .invoke(entity -> entity.setProductName(productDto.getProductName()))
                                 .call(() -> productRepository.flush())
                                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                                 .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
     }
-    public Uni<Response> addCountToProductStock(Long id, Product product){
+    public Uni<Response> addCountToProductStock(Long id, ProductDto productDto){
+        if (productDto.getProductStock() == null || productDto.getProductStock() < 0) {
+            throw new WebApplicationException("Invalid amount to increase on request", 422);
+        }
         return productRepository.findById(id)
                                 .onItem()
                                 .ifNotNull()
-                                .invoke(entity -> entity.addCountToStock(product.getProductStock()))
+                                .invoke(entity -> entity.addCountToStock(productDto.getProductStock()))
                                 .call(() -> productRepository.flush())
                                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                                 .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
 
     }
-        // return Panache
-        //         .withTransaction(() -> Product.<Product> findById(id)
-        //             .onItem().ifNotNull().invoke(entity -> entity.setProductName(product.getProductName()))
-        //         )
-        //         .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
-        //         .onItem().ifNull().continueWith(Response.ok().status(NOT_FOUND)::build);
+
+    public Uni<Response> updatePriceOfProduct(Long id, ProductDto productDto){
+        if (productDto.getProductPrice() < 0) {
+            throw new WebApplicationException("Invalid price on request", 422);
+        }
+        return productRepository.findById(id)
+                                .onItem()
+                                .ifNotNull()
+                                .invoke(entity -> entity.setProductPrice(productDto.getProductPrice()))
+                                .call(() -> productRepository.flush())
+                                .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
+                                .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
+
+    }
 }
