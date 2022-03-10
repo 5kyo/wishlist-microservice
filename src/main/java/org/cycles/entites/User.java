@@ -34,6 +34,14 @@ public class User implements Serializable{
     )
     private Set<Product> products;
 
+    @OneToOne(mappedBy = "user",
+            cascade = { CascadeType.ALL })
+    private ConfirmationToken confirmationToken;
+
+    @OneToMany(mappedBy = "user",
+            cascade = { CascadeType.ALL })
+    private List<RefreshToken> refreshTokens;
+
     public User(){
 
     }
