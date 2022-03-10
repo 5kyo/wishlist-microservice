@@ -2,6 +2,8 @@ package org.cycles.entites;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -32,14 +34,20 @@ public class User implements Serializable{
             joinColumns = { @JoinColumn(name = "userId") },
             inverseJoinColumns = { @JoinColumn(name = "productId") }
     )
+
+    @JsonIgnore
     private Set<Product> products;
 
     @OneToOne(mappedBy = "user",
             cascade = { CascadeType.ALL })
+
+    @JsonIgnore
     private ConfirmationToken confirmationToken;
 
     @OneToMany(mappedBy = "user",
             cascade = { CascadeType.ALL })
+
+    @JsonIgnore
     private List<RefreshToken> refreshTokens;
 
     public User(){

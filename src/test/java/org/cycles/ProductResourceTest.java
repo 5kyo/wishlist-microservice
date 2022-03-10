@@ -1,7 +1,7 @@
 package org.cycles;
 
 import org.cycles.entites.Product;
-import org.junit.jupiter.api.AfterAll;
+// import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -54,14 +54,14 @@ public class ProductResourceTest {
             .statusCode(200);
     }
 
-    @Test
-    @AfterAll
-    @TestSecurity(authorizationEnabled = false)
-    public void testDeleteById(){
-        given() 
-            .when()
-            .delete("/products/{id}")
-            .then()
-            .statusCode(200);
-    }
+    // @Test
+    // @AfterAll
+    // @TestSecurity(authorizationEnabled = false)
+    // public void testDeleteById(){
+    //     given() 
+    //         .when()
+    //         .delete("/products/{id}")
+    //         .then()
+    //         .statusCode(200);
+    // }
 }

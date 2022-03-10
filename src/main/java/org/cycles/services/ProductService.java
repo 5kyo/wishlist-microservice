@@ -53,41 +53,41 @@ public class ProductService {
         .call(() -> productRepository.flush()).replaceWith(Response.ok().status(200)::build);
     }
 
-    public Uni<Response> updateProductName(Long id, ProductDto productDto) {
-        if (productDto.getProductName() == null) {
+    public Uni<Response> updateProductName(Long id, String productName) {
+        if (productName == null) {
             throw new WebApplicationException("Product name was not set on request.", 422);
         }
 
         return productRepository.findById(id)
                                 .onItem()
                                 .ifNotNull()
-                                .invoke(entity -> entity.setProductName(productDto.getProductName()))
+                                .invoke(entity -> entity.setProductName(productName))
                                 .call(() -> productRepository.flush())
                                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                                 .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
     }
-    public Uni<Response> addCountToProductStock(Long id, ProductDto productDto){
-        if (productDto.getProductStock() == null || productDto.getProductStock() < 0) {
+    public Uni<Response> addCountToProductStock(Long id, Integer productStock){
+        if (productStock == null || productStock < 0) {
             throw new WebApplicationException("Invalid amount to increase on request", 422);
         }
         return productRepository.findById(id)
                                 .onItem()
                                 .ifNotNull()
-                                .invoke(entity -> entity.addCountToStock(productDto.getProductStock()))
+                                .invoke(entity -> entity.addCountToStock(productStock))
                                 .call(() -> productRepository.flush())
                                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                                 .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);
 
     }
 
-    public Uni<Response> updatePriceOfProduct(Long id, ProductDto productDto){
-        if (productDto.getProductPrice() < 0) {
+    public Uni<Response> updatePriceOfProduct(Long id, double productPrice){
+        if (productPrice < 0) {
             throw new WebApplicationException("Invalid price on request", 422);
         }
         return productRepository.findById(id)
                                 .onItem()
                                 .ifNotNull()
-                                .invoke(entity -> entity.setProductPrice(productDto.getProductPrice()))
+                                .invoke(entity -> entity.setProductPrice(productPrice))
                                 .call(() -> productRepository.flush())
                                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                                 .onItem().ifNull().continueWith(Response.ok().status(Response.Status.NOT_FOUND)::build);

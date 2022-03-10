@@ -2,7 +2,6 @@ package org.cycles.services;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 
-import io.smallrye.mutiny.Multi;
 import org.cycles.dto.UserDto;
 import org.cycles.entites.User;
 import org.cycles.repositories.ProductRepository;
@@ -14,12 +13,10 @@ import io.smallrye.mutiny.Uni;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class UserService {
@@ -31,13 +28,13 @@ public class UserService {
     ProductRepository productRepository;
 
     @Transactional
-    public Multi<UserDto> getAllUsers(){
-        return userRepository.findAll(Sort.by("userName")).stream().map(this::mapUserToDto);
+    public Uni<List<User>> getAllUsers(){
+        return userRepository.listAll(Sort.by("userName"));
     }
 
     @Transactional
-    public Uni<UserDto> getSingleUser(Long id){
-        return userRepository.findById(id).map(this::mapUserToDto);
+    public Uni<User> getSingleUser(Long id){
+        return userRepository.findById(id);
     }
 
     @Transactional
@@ -58,7 +55,7 @@ public class UserService {
         user.setUserActive(userDto.getUserActive());
 
         return userRepository.persistAndFlush(user)
-                    .replaceWith(Response.ok(userDto).status(Response.Status.CREATED)::build);
+                    .replaceWith(Response.ok(user).status(Response.Status.CREATED)::build);
     }
 
     @Transactional
@@ -96,19 +93,19 @@ public class UserService {
         //             .replaceWith(Response.ok(user).status(Response.Status.ACCEPTED)::build);
     }
 
-    public UserDto mapUserToDto(User user){
-        System.out.println(user.getUserId());
-        return UserDto.builder()
-                .userId(user.getUserId())
-                .userActive(user.getUserActive())
-                .userName(user.getUserName())
-                .userNickname(user.getUserNickname())
-                .userEmail(user.getUserEmail())
-                .userRole(user.getUserRole())
-                .userSurname(user.getUserSurname())
-                .userPassword(user.getUserPassword())
-                .userPhoneNumber(user.getUserPhoneNumber())
-                .build();
-    }
+    // public UserDto mapUserToDto(User user){
+    //     System.out.println(user.getUserId());
+    //     return UserDto.builder()
+    //             .userId(user.getUserId())
+    //             .userActive(user.getUserActive())
+    //             .userName(user.getUserName())
+    //             .userNickname(user.getUserNickname())
+    //             .userEmail(user.getUserEmail())
+    //             .userRole(user.getUserRole())
+    //             .userSurname(user.getUserSurname())
+    //             .userPassword(user.getUserPassword())
+    //             .userPhoneNumber(user.getUserPhoneNumber())
+    //             .build();
+    // }
     
 }

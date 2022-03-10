@@ -2,7 +2,6 @@ package org.cycles.services;
 
 import io.smallrye.mutiny.Uni;
 import org.cycles.dto.WishListDto;
-import org.cycles.entites.Product;
 import org.cycles.entites.WishList;
 import org.cycles.entites.WishListPK;
 import org.cycles.repositories.UserRepository;
@@ -11,9 +10,9 @@ import org.cycles.repositories.WishListRepository;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import java.util.Set;
+
+import java.util.List;
 import java.util.stream.Stream;
 
 @ApplicationScoped
@@ -40,8 +39,10 @@ public class WishListService {
     }
 
     @Transactional
-    public Uni<Set<Product>> getWishListByUserId(Long id){
-        return userRepository.findById(id).map((user)->user.getProducts());
+    public Uni<List<WishList>> getWishListByUserId(Long id){
+        return wishListRepository.find("SELECT ws.wishListPK.productId FROM WishList ws WHERE ws.wishListPK.userId = ?1", id)
+                                    .list();
+        // return userRepository.findById(id).map((user)->user.getProducts());
     }
 
     @Transactional

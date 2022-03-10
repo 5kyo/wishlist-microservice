@@ -11,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -18,7 +19,6 @@ import javax.ws.rs.core.Response;
 import org.cycles.dto.ProductDto;
 import org.cycles.entites.Product;
 import org.cycles.services.ProductService;
-import org.jboss.resteasy.reactive.RestPath;
 
 import io.smallrye.mutiny.Uni;
 
@@ -39,41 +39,44 @@ public class ProductResource {
     @GET
     @Path("{id}")
     @PermitAll
-    public Uni<Product> getSingleProduct(@RestPath Long id){
+    public Uni<Product> getSingleProduct(@PathParam("id") Long id){
         return productService.getSingleProduct(id);
     }
 
     @POST
-    // @RolesAllowed({"admin"})
+    @RolesAllowed({"admin"})
     public Uni<Response> createProduct(ProductDto productDto){
         return productService.createProduct(productDto);
     }
 
     @PATCH
+    @Consumes("text/plain")
     @Path("{id}")
-    // @RolesAllowed({"admin"})
-    public Uni<Response> updateProductName(@RestPath Long id, ProductDto productDto) {
-        return productService.updateProductName(id, productDto);
+    @RolesAllowed({"admin"})
+    public Uni<Response> updateProductName(@PathParam("id") Long id, String productName) {
+        return productService.updateProductName(id, productName);
     }
 
     @PATCH
+    @Consumes("text/plain")
     @Path("productStock/{id}")
-    // @RolesAllowed({"admin"})
-    public Uni<Response> addCountToProductStock(@RestPath Long id, ProductDto productDto) {
-        return productService.addCountToProductStock(id, productDto);
+    @RolesAllowed({"admin"})
+    public Uni<Response> addCountToProductStock(@PathParam("id") Long id, Integer productStock) {
+        return productService.addCountToProductStock(id, productStock);
     }
 
     @PATCH
+    @Consumes("text/plain")
     @Path("productPrice/{id}")
-    // @RolesAllowed({"admin"})
-    public Uni<Response> updatePriceOfProduct(@RestPath Long id, ProductDto productDto) {
-        return productService.updatePriceOfProduct(id, productDto);
+    @RolesAllowed({"admin"})
+    public Uni<Response> updatePriceOfProduct(@PathParam("id") Long id, double productPrice) {
+        return productService.updatePriceOfProduct(id, productPrice);
     }
 
     @DELETE
     @Path("{id}")
     // @RolesAllowed({"admin"})
-    public Uni<Response> deleteProduct(@RestPath Long id) {
+    public Uni<Response> deleteProduct(@PathParam("id") Long id) {
         return productService.deleteProduct(id);
     }
 }

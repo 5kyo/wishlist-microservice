@@ -1,12 +1,10 @@
 package org.cycles.resources;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import org.cycles.dto.UserDto;
 import org.cycles.entites.User;
 import org.cycles.services.UserService;
-import org.jboss.resteasy.reactive.RestPath;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -27,33 +25,33 @@ public class UserResource {
 
     @GET
     @PermitAll
-    public Multi<UserDto> getAllUsers() {
+    public Uni<List<User>> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GET
     @Path("/{id}")
     @PermitAll
-    public Uni<UserDto> getSingleUser(@PathParam("id") Long userId) {
+    public Uni<User> getSingleUser(@PathParam("id") Long userId) {
         return userService.getSingleUser(userId);
     }
 
-    @POST
+    // @POST
     // @RolesAllowed({"admin"})
-    public Uni<Response> createUser(UserDto userDto) {
-        return userService.createUser(userDto);
-    }
+    // public Uni<Response> createUser(UserDto userDto) {
+    //     return userService.createUser(userDto);
+    // }
 
     @DELETE
     @Path("/{id}")
-    // @RolesAllowed({"admin"})
+    @RolesAllowed({"admin"})
     public Uni<Response> deleteUser(@PathParam("id") Long userId) {
         return userService.deleteUser(userId);
     }
 
     @PATCH
     @Path("/{id}")
-    // @RolesAllowed({"admin"})
+    @RolesAllowed({"admin"})
     public Uni<Response> updateUser(@PathParam("id") Long userId, UserDto userDto) {
         return userService.updateUser(userId, userDto);
     }
