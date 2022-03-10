@@ -11,6 +11,7 @@ import org.cycles.repositories.WishListRepository;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -41,5 +42,13 @@ public class WishListService {
     @Transactional
     public Uni<Set<Product>> getWishListByUserId(Long id){
         return userRepository.findById(id).map((user)->user.getProducts());
+    }
+
+    @Transactional
+    public Uni<Response> deleteWishlist(Long userId, Long productId){
+        return wishListRepository.findByComposedKey(userId,productId)
+                .chain(wishList -> wishListRepository.delete(wishList))
+                .chain(wishList -> wishListRepository.flush())
+                .replaceWith(Response.ok().build());
     }
 }

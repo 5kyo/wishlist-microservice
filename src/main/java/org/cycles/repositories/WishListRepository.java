@@ -9,6 +9,6 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class WishListRepository implements PanacheRepository<WishList> {
     public Uni<WishList> findByComposedKey(long userId, long productId){
-        return this.find("FROM WishList WHERE userId = ?1 AND productId = ?2",userId, productId).firstResult();
+        return this.find("FROM WishList ws WHERE ws.wishListPK.userId = ?1 AND ws.wishListPK.productId = ?2",userId, productId).firstResult();
     }
 }

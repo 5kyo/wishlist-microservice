@@ -1,5 +1,6 @@
 package org.cycles.resources;
 
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import org.cycles.dto.UserDto;
@@ -26,14 +27,14 @@ public class UserResource {
 
     @GET
     @PermitAll
-    public Uni<List<User>> getAllUsers() {
+    public Multi<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GET
     @Path("/{id}")
     @PermitAll
-    public Uni<User> getSingleUser(@RestPath Long userId) {
+    public Uni<UserDto> getSingleUser(@PathParam("id") Long userId) {
         return userService.getSingleUser(userId);
     }
 
@@ -46,7 +47,7 @@ public class UserResource {
     @DELETE
     @Path("/{id}")
     // @RolesAllowed({"admin"})
-    public Uni<Response> deleteUser(@RestPath Long userId) {
+    public Uni<Response> deleteUser(@PathParam("id") Long userId) {
         return userService.deleteUser(userId);
     }
 

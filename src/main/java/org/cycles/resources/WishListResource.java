@@ -7,6 +7,7 @@ import org.cycles.services.WishListService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,5 +31,11 @@ public class WishListResource{
     // @RolesAllowed("customer")
     public Uni<Set<Product>> getUserWishList(Long userId){
         return wishListService.getWishListByUserId(userId);
+    }
+
+    @DELETE
+    @Path("/{userId}/{productId}")
+    public Uni<Response> deleteWishlist(Long userId, Long productId){
+        return wishListService.deleteWishlist(userId,productId);
     }
 }
