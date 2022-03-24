@@ -4,7 +4,7 @@ import io.smallrye.mutiny.Uni;
 import org.cycles.dto.WishListDto;
 import org.cycles.entites.WishList;
 import org.cycles.entites.WishListPK;
-import org.cycles.repositories.UserRepository;
+
 import org.cycles.repositories.WishListRepository;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,8 +19,6 @@ import java.util.stream.Stream;
 public class WishListService {
     @Inject
     WishListRepository wishListRepository;
-    @Inject
-    UserRepository userRepository;
 
     @Transactional
     public Uni<Response> addWishList(WishListDto wishListDto){
@@ -40,8 +38,8 @@ public class WishListService {
 
     @Transactional
     public Uni<List<WishList>> getWishListByUserId(Long id){
-        return wishListRepository.find("SELECT ws.wishListPK.productId FROM WishList ws WHERE ws.wishListPK.userId = ?1", id)
-                                    .list();
+        return wishListRepository.find("SELECT DISTINCT u.products FROM User u, WishList ws WHERE ws.wishListPK.userId = ?1", id)
+                .list();
         // return userRepository.findById(id).map((user)->user.getProducts());
     }
 

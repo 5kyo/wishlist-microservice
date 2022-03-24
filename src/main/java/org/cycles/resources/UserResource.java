@@ -44,14 +44,14 @@ public class UserResource {
 
     @DELETE
     @Path("/{id}")
-    //@RolesAllowed({"admin"})
+    @RolesAllowed({"admin"})
     public Uni<Response> deleteUser(@PathParam("id") Long userId) {
         return userService.deleteUser(userId);
     }
 
     @PATCH
     @Path("/{id}")
-    //@RolesAllowed({"admin"})
+    @RolesAllowed({"admin"})
     public Uni<Response> updateUser(@PathParam("id") Long userId, UserDto userDto) {
         return userService.updateUser(userId, userDto);
     }

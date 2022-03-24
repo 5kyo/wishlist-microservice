@@ -3,6 +3,8 @@ package org.cycles.resources;
 import io.smallrye.mutiny.Uni;
 import org.cycles.dto.WishListDto;
 import org.cycles.entites.WishList;
+import org.cycles.repositories.ProductRepository;
+import org.cycles.repositories.UserRepository;
 import org.cycles.services.WishListService;
 
 import javax.annotation.security.RolesAllowed;
@@ -21,22 +23,23 @@ public class WishListResource{
     @Inject
     WishListService wishListService;
 
+
     @POST
-    //@RolesAllowed("customer")
+    @RolesAllowed("customer")
     public Uni<Response> addWishList(WishListDto wishListDto){
         return wishListService.addWishList(wishListDto);
     }
 
     @GET
     @Path("/{userId}")
-    //@RolesAllowed("customer")
+    @RolesAllowed("customer")
     public Uni<List<WishList>> getUserWishList(Long userId){
         return wishListService.getWishListByUserId(userId);
     }
 
     @DELETE
     @Path("/{userId}/{productId}")
-    //@RolesAllowed("customer")
+    @RolesAllowed("customer")
     public Uni<Response> deleteWishlist(Long userId, Long productId){
         return wishListService.deleteWishlist(userId,productId);
     }
